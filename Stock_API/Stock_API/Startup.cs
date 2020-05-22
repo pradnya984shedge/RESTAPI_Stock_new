@@ -13,6 +13,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WebApi.Helpers;
 using WebApi.Services;
+using Microsoft.EntityFrameworkCore;
+using Stock_API.Models;
+using Stock_API.Services;
 
 namespace Stock_API
 {
@@ -35,8 +38,15 @@ namespace Stock_API
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
+            services.AddDbContext<Stock_APIContext>(options =>
+            options.UseMySql(Configuration.GetConnectionString("ApplicationDbContext")));
+
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProfitCenterservice, ProfitCenterservice>();
+
+            services.AddDbContext<Stock_APIContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("Stock_APIContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
